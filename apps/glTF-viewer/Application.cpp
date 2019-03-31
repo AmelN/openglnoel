@@ -186,7 +186,7 @@ int Application::run()
         auto ellapsedTime = glfwGetTime() - seconds;
         auto guiHasFocus = ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard;
         if (!guiHasFocus) {
-            m_viewController.update(float(ellapsedTime));
+            //m_viewController.update(float(ellapsedTime));
             m_trackball.update(float(ellapsedTime));
         }
     }
@@ -215,26 +215,6 @@ Application::Application(int argc, char** argv):
     m_attribs["POSITION"] = positionAttrLocation;
     m_attribs["NORMAL"] = normalAttrLocation;
     m_attribs["TEXCOORD_0"] = texCoordsAttrLocation;
-
-    // Compile Shaders
-    /*
-    m_program = glmlv::compileProgram({ m_ShadersRootPath / m_AppName / "forward.vs.glsl", m_ShadersRootPath / m_AppName / "forward.fs.glsl" });
-    m_program.use();
-
-    // Get Uniforms
-    m_uModelViewProjMatrixLocation = glGetUniformLocation(m_program.glId(), "uModelViewProjMatrix");
-    m_uModelViewMatrixLocation = glGetUniformLocation(m_program.glId(), "uModelViewMatrix");
-    m_uNormalMatrixLocation = glGetUniformLocation(m_program.glId(), "uNormalMatrix");
-
-    m_uDirectionalLightDirLocation = glGetUniformLocation(m_program.glId(), "uDirectionalLightDir");
-    m_uDirectionalLightIntensityLocation = glGetUniformLocation(m_program.glId(), "uDirectionalLightIntensity");
-
-    m_uPointLightPositionLocation = glGetUniformLocation(m_program.glId(), "uPointLightPosition");
-    m_uPointLightIntensityLocation = glGetUniformLocation(m_program.glId(), "uPointLightIntensity");
-
-    m_uKdLocation = glGetUniformLocation(m_program.glId(), "uKd");
-    m_uKdSamplerLocation = glGetUniformLocation(m_program.glId(), "uKdSampler");
-    */
 
     // 1 - LOAD SCENE (.GLTF)
     if (argc < 2) {
@@ -311,11 +291,11 @@ Application::Application(int argc, char** argv):
 
     if (argc == 3)
     {
-        if(!strcmp(argv[2], "1"))
+        if(!strcmp(argv[2], "c1"))
         {
             center = center1;
         }
-        else if (!strcmp(argv[2], "2"))
+        else if (!strcmp(argv[2], "c2"))
         {
             center = center2;
         }
@@ -327,18 +307,19 @@ Application::Application(int argc, char** argv):
     // If the model has a width of 2, then we will be -5 distance behind center
     // Formula found just by testing some values
     //float zDistance = 4.5 + 4 * ((modelDimension.x >= modelDimension.y) ? modelDimension.x/15 : modelDimension.y/15);
-    //float zDistance = 5.0f;    
+    float zDistance = 5.0f + ((modelDimension.x >= modelDimension.y) ? modelDimension.x : modelDimension.y);    
 	
-	float vfov = 182 * (3.14 / 180);
-	float zDistance = m_nWindowHeight / (2 * std::tan(vfov / 2));
+	//float vfov = 182 * (3.14 / 180);
+	//float zDistance = m_nWindowHeight / (2 * std::tan(vfov / 2));
 	
     std::cout << "zDistance : " << zDistance << std::endl;
 
     // TODO --> Find the real Vector Up of the model and the real Vector Forward
-    //m_viewController.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z + zDistance), center, glm::vec3(0, 1, 0)));
+    //m_viewController.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z - zDistance), center, glm::vec3(0, -1, 0)));
     //m_viewController.setSpeed(m_SceneSizeLength * 0.1f); // Let's travel 10% of the scene per second
-
-    m_trackball.Init(center, zDistance, modelDimension.x * 0.1f);
+    
+    //m_trackball.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z - zDistance), center, glm::vec3(0, -1, 0)));
+    m_trackball.Init(center, zDistance, /*modelDimension.x * */0.2f);
 }
 
 // ------ GLTF INITIALIZATION --------

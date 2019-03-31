@@ -8,8 +8,9 @@ float Trackball::scrollOffset = 0;
 
 void Trackball::Init(glm::vec3 center, float distance, float speed)
 {
-    m_Center = glm::vec3(center.x, center.y, center.z + distance);
-    m_speed = speed;
+    m_Center = center;
+	m_fDistance = distance;
+    m_speed = 30*speed;
 
     setViewMatrix();
 
@@ -19,7 +20,7 @@ void Trackball::Init(glm::vec3 center, float distance, float speed)
 // Move the camera towards
 void Trackball::moveFront(float delta)
 {
-    m_Center.z += delta;
+	m_fDistance -= delta;
 }
 // Move the center of the camera
 void Trackball::moveRight(float delta)
@@ -29,7 +30,7 @@ void Trackball::moveRight(float delta)
 // Move the center of the camera
 void Trackball::moveUp(float delta)
 {
-    m_Center.y -= delta;
+    m_Center.y += delta;
 }
 // Rotate the camera on the X axis
 void Trackball::rotateLeft(float degrees)
@@ -44,10 +45,16 @@ void Trackball::rotateUp(float degrees)
 
 void Trackball::setViewMatrix()
 {
-    //m_ViewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, -m_fHauteur, -m_fDistance));
-    m_ViewMatrix = glm::translate(glm::mat4(1.f), m_Center);
+	m_ViewMatrix = glm::lookAt(glm::vec3(m_Center.x, m_Center.y, m_Center.z - m_fDistance), m_Center, glm::vec3(0, -1, 0));
 	m_ViewMatrix = glm::rotate(m_ViewMatrix, m_fAngleX, glm::vec3(0, 1, 0));
 	m_ViewMatrix = glm::rotate(m_ViewMatrix, m_fAngleY, glm::vec3(1, 0, 0));
+
+    m_RcpViewMatrix = glm::inverse(m_ViewMatrix);
+}
+
+void Trackball::setViewMatrix(glm::mat4 matrix)
+{
+    m_ViewMatrix = matrix;    
 
     m_RcpViewMatrix = glm::inverse(m_ViewMatrix);
 }
