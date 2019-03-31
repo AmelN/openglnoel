@@ -6,11 +6,6 @@ struct GLFWwindow;
 
 class Trackball {
 public:
-/*
-	Trackball(GLFWwindow* window, float distance = 5.f, float hauteur = 0.f, float angleX = 0.f, float angleY = 0.f) :
-	m_pWindow(window), m_fDistance(distance), m_fHauteur(hauteur), m_fAngleX(angleX), m_fAngleY(angleY) {}
-*/
-
     Trackball(GLFWwindow* window) : m_pWindow(window) { }
 
 	~Trackball() {}
@@ -28,6 +23,7 @@ public:
     void rotateUp(float degrees); // permettant de tourner verticalement autour du centre de vision.
 
     void setViewMatrix(); // calcule la ViewMatrix de la caméra
+    void setViewMatrix(glm::mat4 matrix); // pour envoyer directement la bonne matrice à l'initialisation
 
 	glm::mat4 getViewMatrix() const
     {
@@ -47,6 +43,7 @@ private:
 
 	float m_fDistance;		// Distance par rapport au centre de la scène
 	float m_fHauteur;		// Hauteur de la caméra par rapport au centre de la scène
+    //glm::vec3 m_distance;   // Distance par rapport au centre de la scène
 	float m_fAngleX;		// Angle effectuée par la caméra autour de l'axe X de la scène
 	float m_fAngleY;		// Angle effectuée par la caméra autour de l'axe Y de la scène
 

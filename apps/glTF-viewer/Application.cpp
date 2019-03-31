@@ -221,7 +221,7 @@ Application::Application(int argc, char** argv):
         printf("Needs input.gltf\n");
         exit(1);
     }
-    const glmlv::fs::path gltfPath = m_AssetsRootPath / m_AppName / glmlv::fs::path{ argv[1] };
+    const glmlv::fs::path gltfPath = m_AssetsRootPath / glmlv::fs::path{ argv[1] };
 
     loadTinyGLTF(gltfPath);
 
@@ -289,7 +289,7 @@ Application::Application(int argc, char** argv):
     glm::vec3 center2 = GetCenterOfBoundingBox(boundingBox);
     std::cout << "Center Method 2 : " << center2 << std::endl;
 
-    if (argc == 3)
+    if (argc >= 3)
     {
         if(!strcmp(argv[2], "c1"))
         {
