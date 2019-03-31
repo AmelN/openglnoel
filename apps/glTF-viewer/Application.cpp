@@ -41,7 +41,8 @@ int Application::run()
             m_projMatrix = glm::perspective(70.f, float(m_nWindowWidth) / m_nWindowHeight, 0.01f, 100.f);            
         }
         
-        m_viewMatrix = m_viewController.getViewMatrix();
+        //m_viewMatrix = m_viewController.getViewMatrix();
+        m_viewMatrix = m_trackball.getViewMatrix();
 
         // ==== GEOMETRY PASS ==== //
         {
@@ -186,6 +187,7 @@ int Application::run()
         auto guiHasFocus = ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard;
         if (!guiHasFocus) {
             m_viewController.update(float(ellapsedTime));
+            m_trackball.update(float(ellapsedTime));
         }
     }
 
@@ -333,9 +335,10 @@ Application::Application(int argc, char** argv):
     std::cout << "zDistance : " << zDistance << std::endl;
 
     // TODO --> Find the real Vector Up of the model and the real Vector Forward
-    m_viewController.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z + zDistance), center, glm::vec3(0, 1, 0)));
-    
+    //m_viewController.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z + zDistance), center, glm::vec3(0, 1, 0)));
     //m_viewController.setSpeed(m_SceneSizeLength * 0.1f); // Let's travel 10% of the scene per second
+
+    m_trackball.Init(center, zDistance, modelDimension.x * 0.1f);
 }
 
 // ------ GLTF INITIALIZATION --------
