@@ -13,6 +13,7 @@
 #include <tiny_gltf.h>
 #include <limits>
 
+#include "Trackball.hpp"
 
 class Application
 {
@@ -55,6 +56,7 @@ private:
     // ====== CAMERA ======== //
 
     glmlv::ViewController m_viewController{ m_GLFWHandle.window(), 3.f };
+    Trackball m_trackball{ m_GLFWHandle.window() };
 
     glm::mat4 m_projMatrix;
     glm::mat4 m_viewMatrix;

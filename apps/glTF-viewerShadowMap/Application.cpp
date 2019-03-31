@@ -46,8 +46,9 @@ int Application::run()
             m_projMatrix = glm::perspective(70.f, float(m_nWindowWidth) / m_nWindowHeight, 0.01f, 100.f);            
         }
         
-        m_viewMatrix = m_viewController.getViewMatrix();
-		const auto rcpViewMatrix = m_viewController.getRcpViewMatrix();
+        //m_viewMatrix = m_viewController.getViewMatrix();
+        m_viewMatrix = m_trackball.getViewMatrix();
+		const auto rcpViewMatrix = m_trackball.getRcpViewMatrix();
 
 		float m_SceneSizeLength = 100.f;
 		const float sceneRadius = m_SceneSizeLength * 0.5f;
@@ -301,7 +302,7 @@ int Application::run()
         auto ellapsedTime = glfwGetTime() - seconds;
         auto guiHasFocus = ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard;
         if (!guiHasFocus) {
-            m_viewController.update(float(ellapsedTime));
+            m_trackball.update(float(ellapsedTime));
         }
     }
 
@@ -335,7 +336,7 @@ Application::Application(int argc, char** argv):
         printf("Needs input.gltf\n");
         exit(1);
     }
-    const glmlv::fs::path gltfPath = m_AssetsRootPath / m_AppName / glmlv::fs::path{ argv[1] };
+    const glmlv::fs::path gltfPath = m_AssetsRootPath / glmlv::fs::path{ argv[1] };
 
     loadTinyGLTF(gltfPath);
 
@@ -419,16 +420,17 @@ Application::Application(int argc, char** argv):
     // If the model has a width of 2, then we will be -5 distance behind center
     // Formula found just by testing some values
     //float zDistance = 4.5 + 4 * ((modelDimension.x >= modelDimension.y) ? modelDimension.x/15 : modelDimension.y/15);
-    //float zDistance = 5.0f;    
+    float zDistance = 5.0f + ((modelDimension.x >= modelDimension.y) ? modelDimension.x : modelDimension.y);     
 	
-	float vfov = 182 * (3.14 / 180);
-	float zDistance = m_nWindowHeight / (2 * std::tan(vfov / 2));
+	//float vfov = 182 * (3.14 / 180);
+	//float zDistance = m_nWindowHeight / (2 * std::tan(vfov / 2));
 	
     std::cout << "zDistance : " << zDistance << std::endl;
 
     // TODO --> Find the real Vector Up of the model and the real Vector Forward
-    m_viewController.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z + zDistance), center, glm::vec3(0, 1, 0)));
-    m_viewController.setSpeed(modelDimension.x * 0.5f); // Let's travel 10% of the scene per second
+    //m_viewController.setViewMatrix(glm::lookAt(glm::vec3(center.x, center.y, center.z + zDistance), center, glm::vec3(0, 1, 0)));
+    //m_viewController.setSpeed(modelDimension.x * 0.5f); // Let's travel 10% of the scene per second
+    m_trackball.Init(center, zDistance, 0.2f);
 }
 
 // ------ GLTF INITIALIZATION --------
